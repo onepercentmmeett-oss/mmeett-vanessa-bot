@@ -562,7 +562,7 @@ def handle_message(message):
         bot.reply_to(message, fallback, parse_mode="Markdown")
         print("✅ Fallback response sent")
     except Exception as e:
-print(f"❌ Error sending fallback: {e}")
+        print(f"❌ Error sending fallback: {e}")
 
 # ============================================
 # Main
