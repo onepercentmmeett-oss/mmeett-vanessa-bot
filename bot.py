@@ -14,12 +14,12 @@ TOKEN = os.environ.get("BOT_TOKEN")
 GROUP_ID = int(os.environ.get("GROUP_ID", "-1003884650831"))
 GENERAL_CHAT_ID = int(os.environ.get("GENERAL_CHAT_ID", "5"))
 FAQ_ID = int(os.environ.get("FAQ_ID", "9"))
-ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "reginez_z")
+ADMIN_USERNAME = os.environ.get("ADMIN_USERNAME", "ukkbasf")
 
 # Links from environment
-TUTORIAL_LINK = os.environ.get("TUTORIAL_LINK", "https://mmeett.com/zh-hant/pages/faq")
-VAULT_LINK = os.environ.get("VAULT_LINK", "https://mmeett.com")
-FAQ_LINK = os.environ.get("FAQ_LINK", "https://mmeett.com/zh-hant/pages/faq")
+TUTORIAL_LINK = os.environ.get("TUTORIAL_LINK", "https://t.me/c/3884650831/41")
+VAULT_LINK = os.environ.get("VAULT_LINK", "https://t.me/c/3884650831/7")
+FAQ_LINK = os.environ.get("FAQ_LINK", "https://t.me/c/3884650831/9")
 
 if not TOKEN:
     print("❌ ERROR: BOT_TOKEN not set!")
@@ -73,7 +73,7 @@ def send_welcome_message(chat_id, topic_id, user_name, user_id):
             chat_id,
             get_welcome_message(user_name),
             parse_mode="Markdown",
-            message_thread_id=topic_id  # Send in specific topic
+            message_thread_id=topic_id
         )
         print(f"✅ Welcome message sent to {user_name} in General Chat")
     except Exception as e:
@@ -99,7 +99,7 @@ FAQ_DATABASE = {
 
 ────────────────
 
-🇨🇳 *为 MMEETT 充电:*
+🇬🇧 *为 MMEETT 充电:*
 
 1️⃣ 将充电线连接到 MMEETT 充电埠
 2️⃣ 插入 5V/0.5A 电源适配器
@@ -113,7 +113,6 @@ FAQ_DATABASE = {
     "APP_DOWNLOAD": {
         "keywords": ["download", "app", "install", "application", "bluetooth", "register", "sign up", "verification code", "下载", "应用", "安装", "蓝牙", "注册", "验证码"],
         "response": """📱 *Download MMEETT App:*
-
 📲 iOS: App Store → Search "MMEETT"
 🤖 Android: Google Play → Search "MMEETT"
 
@@ -128,7 +127,7 @@ FAQ_DATABASE = {
 
 ────────────────
 
-🇨 *下载 MMEETT 应用:*
+🇨🇳 *下载 MMEETT 应用:*
 
 📲 iOS: App Store → 搜索"MMEETT"
 🤖 Android: Google Play → 搜索"MMEETT"
@@ -136,7 +135,7 @@ FAQ_DATABASE = {
 ✅ 安装后:
 • 启用蓝牙访问权限
 • 启用 NFC（用于名片写入）
-• 需要：Android 6 或 iOS 12 以上
+• 需要：Android 6+ 或 iOS 12+
 
 📧 没收到验证码？检查垃圾邮件夹。
 
@@ -160,7 +159,7 @@ FAQ_DATABASE = {
 
 ────────────────
 
-🇨🇳 *激活/绑定设备:*
+🇨 *激活/绑定设备:*
 
 1️⃣ 长按 TRANS 1 秒（蓝灯=已开机）
 2️⃣ 白灯闪烁=准备绑定
@@ -274,7 +273,7 @@ Example: 1-hour recording = ~30 min
     },
     "AI_CHAT": {
         "keywords": ["ai", "chat", "bot", "model", "gpt", "gemini", "deepseek", "search", "think mode", "AI", "聊天", "机器人", "模型", "搜索"],
-"response": """🤖 *AI Chat Feature:*
+        "response": """🤖 *AI Chat Feature:*
 
 1️⃣ Go to "AI Chat" tab in app
 2️⃣ Chat with Mr. MMEETT agent
@@ -289,7 +288,6 @@ Example: 1-hour recording = ~30 min
 ────────────────
 
 🇨🇳 *AI 聊天功能:*
-
 1️⃣ 进入应用"AI 聊天"标签
 2️⃣ 与 MMEETT 先生智能代理聊天
 3️⃣ 切换模型：GPT、Gemini、DeepSeek
@@ -412,13 +410,13 @@ Lmk what you think!
 
 def get_conversational_fallback(user_name):
     """Friendly fallback when no FAQ match"""
+    import random
     fallbacks = [
         f"Hey {user_name}, hmm that's a good one! 🤔 Let me think...",
         f"Great question, {user_name}! I don't have that in my FAQ yet.",
         f"Thanks for asking, {user_name}! I'm still learning too.",
     ]
     
-    import random
     return random.choice(fallbacks) + """
 
 Here's what I *can* help with:
@@ -553,7 +551,7 @@ def handle_message(message):
             bot.reply_to(message, match["response"], parse_mode="Markdown")
             print("✅ Response sent")
         except Exception as e:
-print(f"❌ Error sending FAQ response: {e}")
+            print(f"❌ Error sending FAQ response: {e}")
         return
     
     # No match - use conversational fallback
@@ -564,7 +562,7 @@ print(f"❌ Error sending FAQ response: {e}")
         bot.reply_to(message, fallback, parse_mode="Markdown")
         print("✅ Fallback response sent")
     except Exception as e:
-        print(f"❌ Error sending fallback: {e}")
+print(f"❌ Error sending fallback: {e}")
 
 # ============================================
 # Main
