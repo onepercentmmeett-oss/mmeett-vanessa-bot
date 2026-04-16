@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
-Vanessa - MMEETT FAQ Bot
-Telegram Auto-Responder with Personality
+Vanessa - MMEETT FAQ Guide
+Telegram Auto-Responder with Human Personality
 Topic-aware: Welcomes in General Chat, Answers in FAQ
 """
 
 import os
 import telebot
 from telebot import types
+import random
 
 # Configuration from environment variables
 TOKEN = os.environ.get("BOT_TOKEN")
@@ -29,41 +30,43 @@ if not TOKEN:
 # Initialize bot
 bot = telebot.TeleBot(TOKEN)
 
-print("🤖 Vanessa - MMEETT FAQ Bot started...")
+print("🤖 Vanessa - MMEETT Guide started...")
 print(f"📍 Monitoring group: {GROUP_ID}")
 print(f"💬 General Chat Topic: {GENERAL_CHAT_ID}")
 print(f"❓ FAQ Topic: {FAQ_ID}")
 print(f"👤 Admin: @{ADMIN_USERNAME}")
 
 # ============================================
-# WELCOME MESSAGE
+# WELCOME MESSAGE (Human - No Bot Reveal)
 # ============================================
 
 def get_welcome_message(user_name):
     """Generate welcome message for new members"""
     return f"""
-Hey {user_name}, welcome to MMEETT X 1% Club! ⚡️
+hey {user_name}, welcome to MMEETT X 1% Club! ⚡️
 
-I'm Vanessa, your MMEETT guide bot. Glad to have you here!
+really glad to have u here!
 
-📍 *Quick Navigation:*
+so u don't feel lost, here's what each tab is for:
 
-☕️ *General Chat* — Hang out, introduce yourself, connect with other members
+☕️ General Chat — hang out, introduce urself, connect with other members
 
-📢 *Announcement* — Company updates, Zoom call links, official news
+📢 Announcement — company updates, zoom call links, official news
 
-📂 *The Vault* — Company PPT slides + professional resources (multiple languages)
+📂 The Vault — company PPT slides + professional resources (multiple languages)
 
-🛠 *Learn & Master MMEETT* — Step-by-step tutorials (videos + guides)
+🛠 Learn & Master MMEETT — step-by-step tutorials (videos + guides)
 
-❓ *Frequently Asked Questions* — Got a question? Ask here! I'll answer ASAP
+❓ Frequently Asked Questions — got a question? ask here! i'll answer ASAP
 
-💡 *First Steps:*
-1. Check the Tutorial tab for a video on how to purchase your MMEETT package
-2. Have questions? Drop them in the FAQ tab — I'm there to help!
-3. Want to invite friends? I've got a friendly message ready for you!
+💡 first steps if u're new:
+1. check the Tutorial tab for a video on how to purchase ur MMEETT package
+2. have questions? drop them in the FAQ tab — i'm there to help!
+3. want to invite friends? i've got a friendly message ready for u!
 
-Let's redefine how the world connects. 🚀
+let's redefine how the world connects. 🚀
+
+seriously though, if u need anything just holler! 😇
 """
 
 def send_welcome_message(chat_id, topic_id, user_name, user_id):
@@ -80,290 +83,278 @@ def send_welcome_message(chat_id, topic_id, user_name, user_id):
         print(f"❌ Error sending welcome message: {e}")
 
 # ============================================
-# FAQ DATABASE - MMEETT Hardware/App Focus
+# FAQ DATABASE - MMEETT Full Info
 # ============================================
 
 FAQ_DATABASE = {
+    "PACKAGES": {
+        "keywords": ["package", "packages", "tier", "tiers", "membership", "price", "prices", "pricing", "cost", "how much", "silver", "gold", "platinum", "diamond", "level", "rank"],
+        "response": """hey! we got 4 tiers:
+
+🥈 **Silver** $200 USD (120 PV)
+   Gratitude Bonus: 1.5x return (cap $300)
+
+🥇 **Gold** $600 USD (360 PV)
+   Gratitude Bonus: 2x return (cap $1,200)
+
+💎 **Platinum** $1,800 USD (1,080 PV)
+   Gratitude Bonus: 2.5x return (cap $4,500)
+
+💎💎 **Diamond** $5,400 USD (3,240 PV)
+   Gratitude Bonus: 3x return (cap $16,200)
+
+higher tier = bigger bonuses one
+
+wanna know which one suits u ah? 😇
+""",
+    },
+    "COMMISSION": {
+        "keywords": ["commission", "earn", "earning", "money", "income", "bonus", "bonuses", "award", "awards", "payout", "roi"],
+        "response": """ok so there's 7+2 bonus systems haha:
+
+💰 **Recommendation Award** — 10% direct referral
+🏗 **Placement Award** — 20 floors, 0.3% each
+🌐 **Sharing Award** — 20 generations, 0.4%
+
+📊 **Tier Bonus** — 20%-40% (depends on ur level)
+   Silver = 20% | Gold = 25% | Platinum = 30% | Diamond = 40%
+
+⭐️ **Team Grade Difference Bonus**
+
+🎯 **Grade Difference Equal Prize** — 5%
+
+🌍 **Global Dividend Award** — 6% (for 5-10 stars)
+
+✈️ **Travel Points** — daily 10% increase
+
+🙏 **Gratitude Bonus** — up to 3x return (profit sharing)
+
+basically = more u build, more u earn lah 😇
+
+want me explain any specific one ah?
+""",
+    },
+    "RANKING": {
+        "keywords": ["rank", "ranking", "star", "stars", "level", "explorer", "visionary", "tier", "upgrade", "promote"],
+        "response": """we got 10 star levels one:
+
+⭐️ AI Explorer (4%)
+⭐️⭐️ AI Advocate (6%)
+⭐️⭐️⭐️ AI Influencer (8%)
+...
+⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️ AI Visionary Board (20%)
+
+each level = higher bonus percentage
+
+requirements start from 10,000 PV and go up to millions depending on level
+
+u're at what level now? can help u calculate what's next! 😇
+""",
+    },
     "CHARGING": {
-        "keywords": ["charge", "charging", "battery", "power", "green light", "red light", "low battery", "50 hours", "充电", "电池", "电源", "绿灯", "红灯"],
-        "response": """🔋 *Charging MMEETT:*
+        "keywords": ["charge", "charging", "battery", "power", "green light", "red light", "low battery", "50 hours", "full charge"],
+        "response": """super easy one:
 
-1️⃣ Connect cable to MMEETT port
-2️⃣ Plug into 5V/0.5A adapter (DC-5V)
-3️⃣ Charge until light turns green
+1️⃣ plug cable to MMEETT port
+2️⃣ use 5V/0.5A adapter (DC-5V)
+3️⃣ charge until light turn green
 
-⏱️ Battery: 50 hours total
-💤 Auto-sleep: 10 min inactivity
+⏱️ battery = 50 hours total
+💤 auto sleep after 10 min no activity
 
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇬🇧 *为 MMEETT 充电:*
-
-1️⃣ 将充电线连接到 MMEETT 充电埠
-2️⃣ 插入 5V/0.5A 电源适配器
-3️⃣ 充电直到指示灯变绿
-
-⏱️ 电池：总计 50 小时
-💤 自动睡眠：10 分钟无操作
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+done 🔋
+""",
     },
     "APP_DOWNLOAD": {
-        "keywords": ["download", "app", "install", "application", "bluetooth", "register", "sign up", "verification code", "下载", "应用", "安装", "蓝牙", "注册", "验证码"],
-        "response": """📱 *Download MMEETT App:*
-📲 iOS: App Store → Search "MMEETT"
-🤖 Android: Google Play → Search "MMEETT"
+        "keywords": ["download", "app", "install", "application", "app store", "google play", "register", "sign up", "verification code"],
+        "response": """app store or google play lah:
 
-✅ After install:
-• Enable Bluetooth access
-• Enable NFC (for card writing)
-• Requires: Android 6+ or iOS 12+
+📲 **iOS**: App Store → search "MMEETT"
+🤖 **Android**: Google Play → search "MMEETT"
 
-📧 No verification code? Check spam folder.
+after install:
+• turn on bluetooth
+• turn on NFC (for card writing)
+• need Android 6+ or iOS 12+
 
-📚 Full FAQ: {faq_link}
+if no verification code = check spam folder 😅
 
-────────────────
-
-🇨🇳 *下载 MMEETT 应用:*
-
-📲 iOS: App Store → 搜索"MMEETT"
-🤖 Android: Google Play → 搜索"MMEETT"
-
-✅ 安装后:
-• 启用蓝牙访问权限
-• 启用 NFC（用于名片写入）
-• 需要：Android 6+ 或 iOS 12+
-
-📧 没收到验证码？检查垃圾邮件夹。
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+need help setting up? tag @ukkbasf leh
+""",
     },
-    "DEVICE_ACTIVATION": {
-        "keywords": ["activate", "bind", "connect", "pair", "nfc", "card", "write", "link", "激活", "绑定", "连接", "NFC", "名片", "写入"],
-        "response": """🔗 *Activate/Bind Device:*
+    "ACTIVATION": {
+        "keywords": ["activate", "bind", "connect", "pair", "nfc", "card", "write", "link", "device", "trans"],
+        "response": """ok here's how:
 
-1️⃣ Hold TRANS 1 sec (blue light = on)
-2️⃣ White light flashes = ready to bind
-3️⃣ App: "Not Connected" → "Bind Device"
-4️⃣ Place near phone (iPhone: top back)
+1️⃣ hold TRANS 1 sec (blue light = on)
+2️⃣ white light flashes = ready to bind
+3️⃣ app: "Not Connected" → "Bind Device"
+4️⃣ place near phone (iPhone: top back)
 
-📝 Write card link:
+to write card link:
 • "Me" → "Activate MMEETT Device"
-• Select card → "Activate"
-• Phone NFC must be ON
+• select card → "Activate"
+• phone NFC must be ON
 
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇨 *激活/绑定设备:*
-
-1️⃣ 长按 TRANS 1 秒（蓝灯=已开机）
-2️⃣ 白灯闪烁=准备绑定
-3️⃣ 应用："未连接"→"绑定设备"
-4️⃣ 靠近手机（iPhone：背面顶部）
-
-📝 写入名片链接:
-• "我"→"启用 MMEETT 装置"
-• 选择名片→"启用"
-• 手机必须开启 NFC
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+got stuck? tag me leh 😇
+""",
     },
     "RECORDING": {
-        "keywords": ["record", "recording", "meeting", "call", "audio", "microphone", "start", "stop", "pause", "录音", "会议", "通话", "音频", "麦克风"],
-        "response": """🎙️ *Start Recording:*
+        "keywords": ["record", "recording", "meeting", "call", "audio", "microphone", "start", "stop", "pause", "red light", "yellow light"],
+        "response": """🎙️ **LIVE MODE** (no phone needed):
+1. hold TRANS 1 sec (blue light)
+2. switch MEETING up
+3. vibration + RED light = recording
 
-🎙 LIVE MODE (no phone needed):
-1️⃣ Hold TRANS 1 sec (blue light)
-2️⃣ Switch MEETING up
-3️⃣ Vibration + RED light = recording
+📞 **CALL MODE**:
+1. hold TRANS 1 sec (blue light)
+2. switch MEETING up
+3. double-press TRANS (0.5 sec)
+4. vibration + YELLOW light
 
-📞 CALL MODE:
-1️⃣ Hold TRANS 1 sec (blue light)
-2️⃣ Switch MEETING up
-3️⃣ Double-press TRANS (0.5 sec)
-4️⃣ Vibration + YELLOW light
+⚠️ call mode: device must touch phone (no headphones)
+❌ no pause feature (stop = new file)
 
-⚠️ Call mode: Device must touch phone (no headphones)
-❌ No pause feature (stop = new file)
-
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇨🇳 *开始录音:*
-
-🎙 现场模式（无需手机）:
-1️⃣ 长按 TRANS 1 秒（蓝灯）
-2️⃣ 向上拨动 MEETING 开关
-3️⃣ 震动 + 红灯 = 录音开始
-
-📞 通话模式:
-1️⃣ 长按 TRANS 1 秒（蓝灯）
-2️⃣ 向上拨动 MEETING 开关
-3️⃣ 0.5 秒内连按两下 TRANS
-4️⃣ 震动 + 黄灯
-
-⚠️ 通话模式：设备必须紧贴手机（不可用耳机）
-❌ 无暂停功能（停止=新文件）
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+got it? 😇
+""",
     },
-    "SYNC_TRANSFER": {
-        "keywords": ["sync", "transfer", "upload", "download", "wifi", "bluetooth", "file", "empty folder", "同步", "传输", "上传", "下载", "WiFi", "蓝牙", "文件"],
-        "response": """🔄 *Sync Recordings:*
+    "SYNC": {
+        "keywords": ["sync", "transfer", "upload", "download", "wifi", "bluetooth", "file", "empty folder", "computer"],
+        "response": """🔄 **Sync Recordings**:
 
-1️⃣ Connect device to app (Bluetooth)
-2️⃣ App shows: "Files pending sync"
-3️⃣ Choose: Sync all OR select files
-4️⃣ Files auto-delete after sync
+1. connect device to app (Bluetooth)
+2. app shows: "Files pending sync"
+3. choose: Sync all OR select files
+4. files auto-delete after sync
 
-⚡️ Transfer speeds:
-• Bluetooth: ~tens of KB/sec (slow)
-• WiFi: Much faster (recommended)
+⚡️ transfer speeds:
+• Bluetooth = ~tens of KB/sec (slow)
+• WiFi = much faster (recommended)
 
-📂 Folder empty on computer? Files auto-deleted after sync. Export from app instead.
+📂 folder empty on computer? files auto-deleted after sync. export from app instead.
 
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇨🇳 *同步录音:*
-
-1️⃣ 连接设备到应用（蓝牙）
-2️⃣ 应用提示："有待同步文件"
-3️⃣ 选择：全部同步或部分同步
-4️⃣ 同步后文件自动删除
-
-⚡️ 传输速度:
-• 蓝牙：约每秒几十 KB（慢）
-• WiFi: 更快（推荐）
-
-📂 电脑文件夹为空？同步后文件自动删除。请从应用导出。
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+make sense ah? 😇
+""",
     },
     "TRANSCRIPTION": {
-        "keywords": ["transcribe", "transcript", "text", "convert", "write", "summary", "language", "转写", "文字", "转换", "书写", "摘要", "语言"],
-        "response": """📝 *Transcription:*
+        "keywords": ["transcribe", "transcript", "text", "convert", "write", "summary", "language", "translate"],
+        "response": """📝 **Transcription**:
 
-⏱️ Time: ~50% of recording length
-Example: 1-hour recording = ~30 min
+⏱️ time = ~50% of recording length
+example: 1-hour recording = ~30 min
 
-🌍 Multi-language (auto-detect):
+🌍 multi-language (auto-detect):
 • English • 中文 • 日本語 • ไทย • 한국어
 
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇨🇳 *转写:*
-
-⏱️ 时间：约录音时长的一半
-例如：1 小时录音 = 约 30 分钟
-
-🌍 多语言（自动识别）:
-• 英文 • 中文 • 日文 • 泰文 • 韩文
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+pretty fast one! 😇
+""",
     },
     "AI_CHAT": {
-        "keywords": ["ai", "chat", "bot", "model", "gpt", "gemini", "deepseek", "search", "think mode", "AI", "聊天", "机器人", "模型", "搜索"],
-        "response": """🤖 *AI Chat Feature:*
+        "keywords": ["ai", "chat", "bot", "model", "gpt", "gemini", "deepseek", "search", "think mode", "mr mmeett"],
+        "response": """🤖 **AI Chat Feature**:
 
-1️⃣ Go to "AI Chat" tab in app
-2️⃣ Chat with Mr. MMEETT agent
-3️⃣ Switch models: GPT, Gemini, DeepSeek
-4️⃣ Enable "Web Search" for real-time info
-5️⃣ Enable "Think Mode" for complex questions
+1. go to "AI Chat" tab in app
+2. chat with Mr. MMEETT agent
+3. switch models: GPT, Gemini, DeepSeek
+4. enable "Web Search" for real-time info
+5. enable "Think Mode" for complex questions
 
-💡 Think Mode: Shows AI reasoning (DeepSeek/Gemini only)
+💡 Think Mode = shows AI reasoning (DeepSeek/Gemini only)
 
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇨🇳 *AI 聊天功能:*
-1️⃣ 进入应用"AI 聊天"标签
-2️⃣ 与 MMEETT 先生智能代理聊天
-3️⃣ 切换模型：GPT、Gemini、DeepSeek
-4️⃣ 启用"全网搜索"获取实时信息
-5️⃣ 启用"思考模式"处理复杂问题
-
-💡 思考模式：显示 AI 推理过程（仅 DeepSeek/Gemini）
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+want to try? 😇
+""",
     },
     "SHIPPING": {
-        "keywords": ["shipping", "delivery", "track", "order", "when arrive", "processing", "运送", "送达", "追踪", "订单", "多久到"],
-        "response": """📦 *Shipping & Delivery:*
+        "keywords": ["shipping", "delivery", "track", "order", "when arrive", "processing", "how long", "dispatch"],
+        "response": """📦 **Shipping & Delivery**:
 
-📦 Processing: 3-5 business days
-🚚 Delivery: 6-15 business days
+📦 processing: 3-5 business days
+🚚 delivery: 6-15 business days
 
-📍 Track order:
+📍 track order:
 App → "Me" → "Member" → "Orders"
 
-🌍 Worldwide shipping available
+🌍 worldwide shipping available
 
-📚 Full FAQ: {faq_link}
-
-────────────────
-
-🇨 *运送与送达:*
-
- 处理：3-5 个工作日
-🚚 送达：6-15 个工作日
-
-📍 追踪订单:
-应用→"我"→"会员"→"订单"
-
-🌍 提供全球运送服务
-
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+anything else ah? 😇
+""",
     },
-    "RETURNS_WARRANTY": {
-        "keywords": ["return", "refund", "exchange", "warranty", "repair", "broken", "20 day", "12 month", "退货", "退款", "换货", "保修", "维修", "坏了"],
-        "response": """🔄 *Returns & Warranty:*
+    "RETURNS": {
+        "keywords": ["return", "refund", "exchange", "warranty", "repair", "broken", "20 day", "12 month", "defective"],
+        "response": """🔄 **Returns & Warranty**:
 
-🔄 Returns: 20 days from purchase
+🔄 returns: 20 days from purchase
 • MMEETT Card, Membership, Computing power
 
-🔧 Warranty: 12 months from purchase
-• Free repairs during warranty
-• Need: serial number + proof of purchase
+🔧 warranty: 12 months from purchase
+• free repairs during warranty
+• need: serial number + proof of purchase
 
-📞 Contact: App → "Me" → "Customer Service"
+📞 contact: App → "Me" → "Customer Service"
 
-📚 Full FAQ: {faq_link}
+got issues? tag @ukkbasf leh 😇
+""",
+    },
+    "TRAVEL_POINTS": {
+        "keywords": ["travel", "point", "points", "trip", "vacation", "bonus increase", "daily"],
+        "response": """✈️ **Travel Points**:
 
-────────────────
+daily 10% bonus increase one!
 
-🇨🇳 *退换与保修:*
+basically = every day ur bonus pool grows by 10%
 
-🔄 退货：购买后 20 天内
-• MMEETT 卡、会员、算力服务
+use for:
+• company trips
+• events
+• or convert to cash (depends on level)
 
-🔧 保修：自购买日起 12 个月
-• 保修期内免费维修
-• 需提供：序列号 + 购买证明
+pretty nice ah? 😇
+""",
+    },
+    "GRADE_DIFFERENCE": {
+        "keywords": ["grade difference", "equal prize", "team grade", "5 percent", "5%"],
+        "response": """🎯 **Grade Difference Bonuses**:
 
-📞 联系：应用→"我"→"客服"
+**Team Grade Difference**:
+earn from difference between ur level and ur team's level
 
-📚 完整 FAQ: {faq_link}""".format(faq_link=FAQ_LINK),
+**Grade Difference Equal Prize** = 5%
+when u and ur referral same level, u still earn 5%
+
+so even if u're same rank, still can earn! 😇
+
+confusing ah? can explain more if u want!
+""",
+    },
+    "GLOBAL_DIVIDEND": {
+        "keywords": ["global", "dividend", "6 percent", "6%", "star", "5 star", "10 star"],
+        "response": """🌍 **Global Dividend Award**:
+
+6% of global pool shared among 5-10 star members
+
+requirements:
+• reach 5-star level minimum
+• maintain performance
+
+this is the big one lah — passive income from entire company growth! 😇
+
+u're aiming for what level?
+""",
+    },
+    "FAVORITE_COLOR": {
+        "keywords": ["favourite color", "favorite color", "favourite colour", "favorite colour", "color", "colour", "fav color"],
+        "response": """green for the colour of money lol 🤑🤑
+
+(but seriously, MMEETT green like charging light one 🔋)
+""",
     },
 }
 
 # Forward triggers (send to human admin)
 FORWARD_TRIGGERS = [
-    "price", "cost", "how much", "expensive", "cheap", "discount", "promo",
-    "bulk", "wholesale", "partnership", "collaborate", "reseller", "distributor",
     "bug", "crash", "error", "broken", "not working", "issue", "problem",
-    "refund", "complaint", "angry", "unhappy",
+    "complaint", "angry", "unhappy", "scam", "fraud",
+    "legal", "lawyer", "sue", "report",
 ]
 
 # ============================================
@@ -392,60 +383,33 @@ def should_forward_to_human(text):
     lower_text = text.lower()
     return any(trigger in lower_text for trigger in FORWARD_TRIGGERS)
 
-def get_invitation_message():
-    """Generate friend-to-friend invitation message"""
-    return """
-Hey! 👋
-
-I just found this AI platform that's actually legit — not another course or "guru" stuff.
-
-It's called MMEETT. Basically helps you create content, automate DMs, translate into 140+ languages, and even build AI cards for networking.
-
-I'm testing it out myself and figured you might find it useful too. No pressure at all — just thought I'd share.
-
-Check it out if you're curious: {vault_link}
-
-Lmk what you think!
-""".format(vault_link=VAULT_LINK)
-
 def get_conversational_fallback(user_name):
     """Friendly fallback when no FAQ match"""
-    import random
     fallbacks = [
-        f"Hey {user_name}, hmm that's a good one! 🤔 Let me think...",
-        f"Great question, {user_name}! I don't have that in my FAQ yet.",
-        f"Thanks for asking, {user_name}! I'm still learning too.",
+        "hmm that's a good one 🤔",
+        "tbh i don't have that answer yet!",
+        "oh interesting question! let me think...",
     ]
     
     return random.choice(fallbacks) + """
 
-Here's what I *can* help with:
-• Charging & battery 🔋
-• App download & setup 📱
-• Device activation 🔗
-• Recording features 🎙️
-• Sync & transfer 🔄
-• Transcription 📝
-• AI Chat 🤖
-• Shipping 📦
-• Returns & warranty 🔄
+but i CAN help with:
+• charging & battery 🔋
+• app download & setup 📱
+• device activation 🔗
+• recording features 🎙️
+• sync & transfer 🔄
+• transcription 📝
+• AI chat 🤖
+• shipping 📦
+• returns & warranty 🔄
+• packages & pricing 💰
+• commissions & bonuses 💸
 
-Or check the full FAQ: {faq_link}
+or check the full FAQ: {faq_link}
 
-Need human help? @{admin_username} can assist!
+need human help? @{admin_username} can assist! 😇
 """.format(faq_link=FAQ_LINK, admin_username=ADMIN_USERNAME)
-
-def get_wrong_tab_guidance(user_name, topic_id):
-    """Guide users to the correct tab"""
-    if topic_id != FAQ_ID:
-        return f"""
-Hey {user_name}! 👋
-
-Great question! For faster answers, could you ask this in the *Frequently Asked Questions* tab? That's where I live and can help you best! ❓
-
-I'll keep an eye out for your question there! 😊
-"""
-    return None
 
 # ============================================
 # Bot Handlers
@@ -471,7 +435,9 @@ def handle_new_member(message):
         # Get user name
         user_name = new_user.first_name
         if new_user.username:
-            user_name += f" @{new_user.username}"
+            user_name = f"@{new_user.username}"
+        else:
+            user_name = new_user.first_name
         
         print(f"👋 New member joined: {user_name}")
         
@@ -500,22 +466,15 @@ def handle_message(message):
     text = message.text
     from_user = message.from_user.first_name
     if message.from_user.username:
-        from_user += f" @{message.from_user.username}"
+        from_user = f"@{message.from_user.username}"
     
     print(f"📨 Message in Topic {topic_id} from {from_user}: {text[:50]}...")
     
-    # Check if message is in FAQ tab
+    # ============================================
+    # RULE: Only reply in FAQ topic (Topic 9)
+    # ============================================
     if topic_id != FAQ_ID:
-        # Not in FAQ tab - check if it's a question
-        if "?" in text or any(kw in text.lower() for kw in ["how", "what", "when", "where", "why", "can", "do", "does"]):
-            # It's a question but in wrong tab
-            guidance = get_wrong_tab_guidance(from_user, topic_id)
-            if guidance:
-                try:
-                    bot.reply_to(message, guidance, parse_mode="Markdown")
-                    print(f"✅ Sent wrong tab guidance to {from_user}")
-                except Exception as e:
-                    print(f"❌ Error sending guidance: {e}")
+        # Not in FAQ tab - stay silent (no guidance messages)
         return
     
     # We're in FAQ tab - process the question
@@ -524,14 +483,15 @@ def handle_message(message):
     if should_forward_to_human(text):
         print("⚠️ Forwarding to admin...")
         
-        forward_message = f"""⚠️ *Question Needs Human Help*
-👤 From: {from_user}
-❓ Question: "{text}"
+        forward_message = f"""⚠️ this needs human help
 
-📩 Forwarding to @{ADMIN_USERNAME} for assistance...
+👤 from: {from_user}
+❓ question: "{text}"
+
+tagging @{ADMIN_USERNAME} for assistance...
 
 ────────────
-💡 Tip: Check full FAQ:
+💡 tip: full FAQ here:
 {FAQ_LINK}"""
         
         try:
@@ -571,4 +531,5 @@ def handle_message(message):
 if __name__ == "__main__":
     print("✅ Vanessa is running. Press Ctrl+C to stop.")
     bot.remove_webhook()
-    bot.infinity_polling()
+bot.infinity_polling()
+
